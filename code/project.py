@@ -20,13 +20,14 @@ planner = Planner(
     analyzer,
     conf["car_length"],
 )
-webcam = cv2.VideoCapture(conf["capture_device"])
 
 while cv2.waitKey(1) != 27:
-    success, image = newest_frame(webcam)
+    webcam = cv2.VideoCapture(conf["capture_device"])
+    success, image = webcam.read()
     if success:
         imageHSV = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         cv2.imshow("Webcam", image)
         plan = planner.plan(imageHSV)
         if plan is not None:
             run(command + plan[1].split())  # red car
+    webcam.release()
